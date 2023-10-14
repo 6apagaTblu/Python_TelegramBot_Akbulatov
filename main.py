@@ -1,7 +1,8 @@
 def draw_board(board):
     """Рисование доски 3х3"""
+    print('--------')
     for i in range(3):
-        print('|'.join(board[i]))
+        print(' | '.join(board[i]))
         print('--------')
 
 def ask_and_make_move(player, board):
@@ -11,8 +12,18 @@ def ask_and_make_move(player, board):
 
 def ask_move(player, board):
     """Запрос хода"""
-    x, y = input(f'Ход игрока {player}. Введите координаты (через пробел)').split()
-    x, y = int(x), int(y)
+    try:
+        x, y = input(f'Ход игрока {player}. Введите координаты (через пробел)').split()
+    except ValueError:
+        print('Необходимо ввести ровно две координаты')
+        return ask_move(player, board)
+
+    try:
+        x, y = int(x), int(y)
+    except ValueError:
+        print('Необходимо ввести координаты в числовом формате')
+        return ask_move(player, board)
+
     if (0 <= x <= 2) and (0 <= y <= 2):
         if board[x][y] == ' ':
             return (x, y)
@@ -77,3 +88,4 @@ def tic_tac_toe():
         restart = input('Хотите ли сыграть снова?(y/n)')
         if restart.lower() != 'y':
             break
+tic_tac_toe()
