@@ -1,9 +1,21 @@
+from colorama import init, Fore, Back
+
 def draw_board(board):
     """Рисование доски 3х3"""
-    print('--------')
+    print('---------')
     for i in range(3):
-        print(' | '.join(board[i]))
-        print('--------')
+        for j in range(3):
+            if board[i][j] == ' ':
+                print(Back.BLUE + board[i][j] + Back.RESET, end='')
+            elif board[i][j] == 'X':
+                print(Back.GREEN + Fore.RED + board[i][j] + Back.RESET + Fore.RESET, end = '')
+            else:
+                print(Back.YELLOW + Fore.BLACK + board[i][j] + Back.RESET + Fore.RESET, end = '')
+            if j < 2:
+                print(' | ', end = '')
+            else:
+                print('')
+        print('---------')
 
 def ask_and_make_move(player, board):
     """Запрос и выполнение хода"""
@@ -88,4 +100,6 @@ def tic_tac_toe():
         restart = input('Хотите ли сыграть снова?(y/n)')
         if restart.lower() != 'y':
             break
+
+init()
 tic_tac_toe()
