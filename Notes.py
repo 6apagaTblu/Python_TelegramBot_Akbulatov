@@ -1,16 +1,22 @@
 import os
 
 def build_note(note_text, note_name):
+    """Создание заметки, на вход: текст и название заметки, на выход: файл созданной заметки"""
+
     with open(f'{note_name}.txt', 'w') as f:
         f.write(note_text)
     print(f'Заметка {note_name} создана')
 
 def create_note():
+    """Запрос создания заметки, запрашивает данные у пользователя и вызывает build_note"""
+
     note_name = input('Введите название новой заметки: ')
     note_text = input('Введите текст новой заметки: ')
     build_note(note_text, note_name)
 
 def read_note():
+    """Чтение заметки, запрашивает данные у пользователя и открывает файл заметки"""
+
     note_name = input('Введите название заметки для чтения: ')
     if os.path.isfile(f'{note_name}.txt'):
         with open(f'{note_name}.txt', 'r') as f:
@@ -19,6 +25,8 @@ def read_note():
         print('Заметка с таким названием не найдена')
 
 def edit_note():
+    """Редактирование заметки, запрашивает данные у пользователя и вносит корректировки в файл заметки"""
+
     note_name = input('Введите название редактируемой заметки: ')
     if os.path.isfile(f'{note_name}.txt'):
         with open(f'{note_name}.txt', 'r') as f:
@@ -31,6 +39,8 @@ def edit_note():
         print('Заметка с таким названием не найдена')
 
 def delete_note():
+    """Удаление заметки, запрашивает даныне у пользователя и удаляет файл заметки"""
+
     note_name = input('Введите название планируемой к удалению заметки: ')
     if os.path.isfile(f'{note_name}.txt'):
         os.remove(f'{note_name}.txt')
@@ -39,6 +49,8 @@ def delete_note():
         print('Заметка с таким названием не найдена')
 
 def main():
+    """Основной код, запрашивает код команды и вызывает соответствующую функцию"""
+
     while True:
         act = input('''Выберите действие:
         1. Создать заметку (C)
