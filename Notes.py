@@ -48,6 +48,25 @@ def delete_note():
     else:
         print('Заметка с таким названием не найдена')
 
+def display_notes():
+    """Вывод всех заметок в порядке их длинны"""
+
+    ls_notes = [f for f in os.listdir() if f.endswith('.txt')] #список всех txt-файлов
+    d_notes = {}
+
+    for note in ls_notes: #создаем словарь с длиной заметок
+        with open(f'{note}', 'r') as file:
+            content = file.read()
+        d_notes[note] = len(content)
+
+    d_notes = sorted(d_notes.items(), key=lambda x: x[1]) #превращаем словарь в сортированный список кортежей
+
+
+    for note in d_notes:
+        print(f'Заметка "{note[0][:-4]}"') #печатаем название заметки без расширения
+        with open(f'{note[0]}', 'r') as file:
+            print('Содержание: ' + file.read(), end='\n\n') #печатаем содержание заметки
+
 def main():
     """Основной код, запрашивает код команды и вызывает соответствующую функцию"""
 
@@ -57,6 +76,7 @@ def main():
         2. Прочитать заметку (R)
         3. Редактировать заметку (E)
         4. Удалить заметку (D)
+        5. Вывести все заметки (DA)
         ''')
         if act.lower() == 'c':
             create_note()
@@ -66,6 +86,8 @@ def main():
             edit_note()
         elif act.lower() == 'd':
             delete_note()
+        elif act.lower() == 'da':
+            display_notes()
         else:
             print('Вы ввели некорректную команду')
         act = input('Хотите продолжить? (y/n) ')
