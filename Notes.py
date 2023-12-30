@@ -48,8 +48,8 @@ def delete_note():
     else:
         print('Заметка с таким названием не найдена')
 
-def display_notes():
-    """Вывод всех заметок в порядке их длинны"""
+def display_sorted_notes(rev=False):
+    """Вывод всех заметок в порядке, указанном пользователем"""
 
     ls_notes = [f for f in os.listdir() if f.endswith('.txt')] #список всех txt-файлов
     d_notes = {}
@@ -59,7 +59,7 @@ def display_notes():
             content = file.read()
         d_notes[note] = len(content)
 
-    d_notes = sorted(d_notes.items(), key=lambda x: x[1]) #превращаем словарь в сортированный список кортежей
+    d_notes = sorted(d_notes.items(), key=lambda x: x[1], reverse=rev) #превращаем словарь в сортированный список кортежей
 
 
     for note in d_notes:
@@ -87,7 +87,8 @@ def main():
         elif act.lower() == 'd':
             delete_note()
         elif act.lower() == 'da':
-            display_notes()
+            act = input('Прямая сортировка? (y/n)')  # определяем направление сортировки
+            display_sorted_notes(False if act.lower() == 'y' else True)
         else:
             print('Вы ввели некорректную команду')
         act = input('Хотите продолжить? (y/n) ')
