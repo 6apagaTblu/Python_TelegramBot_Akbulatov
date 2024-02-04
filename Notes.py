@@ -3,7 +3,7 @@ import os
 def build_note(note_text, note_name):
     """Создание заметки, на вход: текст и название заметки, на выход: файл созданной заметки"""
 
-    with open(f'{note_name}.txt', 'w') as f:
+    with open(f'notes/{note_name}.txt', 'w') as f:
         f.write(note_text)
     print(f'Заметка {note_name} создана')
 
@@ -18,8 +18,8 @@ def read_note():
     """Чтение заметки, запрашивает данные у пользователя и открывает файл заметки"""
 
     note_name = input('Введите название заметки для чтения: ')
-    if os.path.isfile(f'{note_name}.txt'):
-        with open(f'{note_name}.txt', 'r') as f:
+    if os.path.isfile(f'notes/{note_name}.txt'):
+        with open(f'notes/{note_name}.txt', 'r') as f:
             print(f.read())
     else:
         print('Заметка с таким названием не найдена')
@@ -28,11 +28,11 @@ def edit_note():
     """Редактирование заметки, запрашивает данные у пользователя и вносит корректировки в файл заметки"""
 
     note_name = input('Введите название редактируемой заметки: ')
-    if os.path.isfile(f'{note_name}.txt'):
-        with open(f'{note_name}.txt', 'r') as f:
+    if os.path.isfile(f'notes/{note_name}.txt'):
+        with open(f'notes/{note_name}.txt', 'r') as f:
             print(f.read())
         note_text = input('Введите новый текст заметки: ')
-        with open(f'{note_name}.txt', 'w') as f:
+        with open(f'notes/{note_name}.txt', 'w') as f:
             f.write(note_text)
         print(f'Изменения в заметку {note_name} внесены')
     else:
@@ -42,30 +42,29 @@ def delete_note():
     """Удаление заметки, запрашивает даныне у пользователя и удаляет файл заметки"""
 
     note_name = input('Введите название планируемой к удалению заметки: ')
-    if os.path.isfile(f'{note_name}.txt'):
-        os.remove(f'{note_name}.txt')
+    if os.path.isfile(f'notes/{note_name}.txt'):
+        os.remove(f'notes/{note_name}.txt')
         print(f'Заметка {note_name} удалена')
     else:
         print('Заметка с таким названием не найдена')
 
-def display_notes():
-    """Вывод всех заметок в порядке их длинны"""
+def display_sorted_notes(rev=False):
+    """Вывод всех заметок в порядке, указанном пользователем"""
 
-    ls_notes = [f for f in os.listdir() if f.endswith('.txt')] #список всех txt-файлов
+    ls_notes = [f for f in os.listdir(os.path.join(os.getcwd(), 'notes'))
+                if f.endswith('.txt')] #список всех txt-файлов
     d_notes = {}
 
     for note in ls_notes: #создаем словарь с длиной заметок
-        with open(f'{note}', 'r') as file:
-            content = file.read()
-        d_notes[note] = len(content)
+        with open(f'notes/{note}', 'r') as file:
+            d_notes[note] = file.read()
 
-    d_notes = sorted(d_notes.items(), key=lambda x: x[1]) #превращаем словарь в сортированный список кортежей
-
+    d_notes = sorted(d_notes.items(),
+                     key=lambda x: len(x[1]), reverse=rev) #превращаем словарь в сортированный список кортежей
 
     for note in d_notes:
         print(f'Заметка "{note[0][:-4]}"') #печатаем название заметки без расширения
-        with open(f'{note[0]}', 'r') as file:
-            print('Содержание: ' + file.read(), end='\n\n') #печатаем содержание заметки
+        print(f'Содержание: {note[1]}', end='\n\n') #печатаем содержание заметки
 
 def main():
     """Основной код, запрашивает код команды и вызывает соответствующую функцию"""
@@ -87,7 +86,8 @@ def main():
         elif act.lower() == 'd':
             delete_note()
         elif act.lower() == 'da':
-            display_notes()
+            act = input('Прямая сортировка? (y/n)')  # определяем направление сортировки
+            display_sorted_notes(False if act.lower() == 'y' else True)
         else:
             print('Вы ввели некорректную команду')
         act = input('Хотите продолжить? (y/n) ')
